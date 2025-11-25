@@ -1,6 +1,99 @@
+import matplotlib.pyplot as plt
+
+
+def plot_technical_indicators(df, stock_name):
+    """Plot all technical indicators"""
+    fig, axes = plt.subplots(4, 1, figsize=(15, 12))
+    fig.suptitle(f'Technical Indicators - {stock_name}', fontsize=16)
+
+    # 1. Price with Moving Averages
+    axes[0].plot(df['Close'], label='Close Price', color='black', linewidth=1)
+    axes[0].plot(df['MA_20'], label='MA 20', alpha=0.7)
+    axes[0].plot(df['MA_50'], label='MA 50', alpha=0.7)
+    axes[0].set_title('Price & Moving Averages')
+    axes[0].legend()
+    axes[0].grid(True, alpha=0.3)
+
+    # 2. RSI
+    axes[1].plot(df['RSI_14'], label='RSI 14', color='purple')
+    axes[1].axhline(70, linestyle='--', color='red',
+                    alpha=0.7, label='Overbought')
+    axes[1].axhline(30, linestyle='--', color='green',
+                    alpha=0.7, label='Oversold')
+    axes[1].set_title('RSI')
+    axes[1].legend()
+    axes[1].grid(True, alpha=0.3)
+
+    # 3. MACD
+    axes[2].plot(df['MACD'], label='MACD', color='blue')
+    axes[2].plot(df['MACD_Signal'], label='Signal', color='red')
+    axes[2].bar(df.index, df['MACD_Hist'], label='Histogram', alpha=0.3)
+    axes[2].set_title('MACD')
+    axes[2].legend()
+    axes[2].grid(True, alpha=0.3)
+
+    # 4. Volume
+    axes[3].bar(df.index, df['Volume'], alpha=0.3, color='gray')
+    axes[3].set_title('Volume')
+    axes[3].grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_finance_metrics(metrics_dict, stock_name):
+    """Plot financial metrics comparison"""
+    stocks = list(metrics_dict.keys())
+
+    # Create subplots for different metrics
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    fig.suptitle(f'Financial Metrics Comparison - {stock_name}', fontsize=16)
+
+    # Volatility
+    volatilities = [metrics_dict[stock]['volatility'] for stock in stocks]
+    axes[0, 0].bar(stocks, volatilities, color='lightcoral')
+    axes[0, 0].set_title('Volatility (Risk)')
+
+    # Sharpe Ratio
+    sharpes = [metrics_dict[stock]['sharpe_ratio'] for stock in stocks]
+    axes[0, 1].bar(stocks, sharpes, color='lightgreen')
+    axes[0, 1].set_title('Sharpe Ratio (Risk-Adjusted Return)')
+
+    # Max Drawdown
+    drawdowns = [metrics_dict[stock]['max_drawdown'] for stock in stocks]
+    axes[1, 0].bar(stocks, drawdowns, color='lightblue')
+    axes[1, 0].set_title('Max Drawdown (Worst Loss)')
+
+    # Cumulative Return
+    returns = [metrics_dict[stock]['cumulative_return'] for stock in stocks]
+    axes[1, 1].bar(stocks, returns, color='gold')
+    axes[1, 1].set_title('Cumulative Return (%)')
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_returns_distribution(df, stock_name):
+    """Plot distribution of daily returns"""
+    returns = df['Close'].pct_change().dropna()
+
+    plt.figure(figsize=(12, 6))
+    plt.hist(returns, bins=50, alpha=0.7, color='skyblue', edgecolor='black')
+    plt.axvline(returns.mean(), color='red', linestyle='--',
+                label=f'Mean: {returns.mean():.4f}')
+    plt.axvline(returns.std(), color='orange', linestyle='--',
+                label=f'Std: {returns.std():.4f}')
+    plt.title(f'Daily Returns Distribution - {stock_name}')
+    plt.xlabel('Daily Returns')
+    plt.ylabel('Frequency')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.show()
+
+
 """
 Module for visualizing technical indicators and financial metrics for ALL stocks - FIXED
-"""
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -11,18 +104,18 @@ warnings.filterwarnings('ignore')
 
 
 class StockVisualizer:
-    """
-    Creates visualizations for technical indicators and financial metrics for ALL stocks
-    """
+    
+   # Creates visualizations for technical indicators and financial metrics for ALL stocks
+    
 
     def __init__(self):
         plt.style.use('seaborn-v0_8')
         self.fig_size = (15, 10)
 
     def plot_technical_indicators(self, df: pd.DataFrame, ticker: str):
-        """
-        Create comprehensive visualization for technical indicators
-        """
+        
+        #Create comprehensive visualization for technical indicators
+        
         fig, axes = plt.subplots(4, 1, figsize=(15, 12))
         fig.suptitle(
             f'TECHNICAL ANALYSIS - {ticker}', fontsize=16, fontweight='bold')
@@ -84,9 +177,9 @@ class StockVisualizer:
         plt.show()
 
     def plot_pynance_metrics(self, df: pd.DataFrame, ticker: str):
-        """
-        Create visualization for PyNance financial metrics
-        """
+        
+        #Create visualization for PyNance financial metrics
+        
         pynance_cols = [col for col in df.columns if col.startswith('Pn_')]
 
         if not pynance_cols:
@@ -135,9 +228,9 @@ class StockVisualizer:
         plt.show()
 
     def create_summary_dashboard(self, stocks_dict: Dict, ticker: str):
-        """
-        Create a complete dashboard for a single stock
-        """
+        
+       # Create a complete dashboard for a single stock
+        
         if ticker not in stocks_dict:
             print(f"Ticker {ticker} not found in data")
             return
@@ -159,9 +252,9 @@ class StockVisualizer:
         print("\n" + "=" * 60 + "\n")
 
     def print_latest_values(self, df: pd.DataFrame, ticker: str):
-        """
-        Print latest indicator values with interpretations
-        """
+        
+        #Print latest indicator values with interpretations
+        
         latest = df.iloc[-1]
 
         print(f"📈 LATEST INDICATOR VALUES - {ticker}")
@@ -207,9 +300,9 @@ class StockVisualizer:
 
 
 def create_visualizations(stocks_dict: Dict):
-    """
-    Create visualizations for ALL stocks in the dictionary - FIXED VERSION
-    """
+    
+   # Create visualizations for ALL stocks in the dictionary - FIXED VERSION
+    
     tickers = list(stocks_dict.keys())
 
     print(f"📊 CREATING TECHNICAL ANALYSIS DASHBOARDS")
@@ -236,3 +329,4 @@ def create_visualizations(stocks_dict: Dict):
         f"✅ COMPLETED: Technical analysis dashboards created for ALL {len(tickers)} stocks!")
     print(f"📋 Stocks analyzed: {', '.join(tickers)}")
     print(f"{'='*60}")
+"""
