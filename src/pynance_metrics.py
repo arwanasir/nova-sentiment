@@ -1,34 +1,34 @@
-"""
-Financial Metrics for Task 2 Completion
-"""
 import pandas as pd
 import numpy as np
 
 
-class FinancialMetrics:
-    def __init__(self, data: pd.DataFrame):
-        self.data = data
-        self.metrics = {}
+def calculate_finance_metrics(df):
+    """
+    Calculate financial metrics - tries PyNance first, falls back to manual calculation
+    """
+    # Try PyNance first
+    try:
+        import pynance as pn
+        data = pn.data(df)
 
-    def calculate_metrics(self):
-        """Calculate essential financial metrics"""
-        # Basic returns and volatility
-        self.data['Returns'] = self.data['Close'].pct_change()
-        self.data['Volatility_20D'] = self.data['Returns'].rolling(
-            20).std() * np.sqrt(252)
-        self.data['Cumulative_Returns'] = (
-            1 + self.data['Returns']).cumprod() - 1
-        self.data['Price_SMA_20'] = self.data['Close'].rolling(20).mean()
-
-        self.metrics = {
-            'Returns': 'Daily returns',
-            'Volatility_20D': '20-day volatility',
-            'Cumulative_Returns': 'Cumulative returns',
-            'Price_SMA_20': '20-day price SMA'
+        metrics = {
+            'volatility': data.volatility(),
+            'sharpe_ratio': data.sharpe(),
+            'max_drawdown': data.drawdown().min(),
+            'cumulative_return': data.returns().cumsum().iloc[-1]
         }
-        return self.data
+        metrics['method'] = 'pynance'
+        return metrics
 
+    except:
+        # Fallback: Calculate manually
+        returns = df['Close'].pct_change().dropna()
 
-def calculate_financial_metrics(data):
-    calculator = FinancialMetrics(data)
-    return calculator.calculate_metrics()
+        metrics = {
+            'volatility': returns.std() * (252 ** 0.5),  # Annualized
+            'sharpe_ratio': returns.mean() / returns.std() * (252 ** 0.5),
+            'max_drawdown': (df['Close'] / df['Close'].cummax() - 1).min(),
+            'cumulative_return': (df['Close'].iloc[-1] / df['Close'].iloc[0] - 1) * 100
+        }
+        metrics['method'] = 'manual'
+        return metrics
