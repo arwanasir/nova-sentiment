@@ -1,23 +1,50 @@
 # nova-sentiment
 
-# Financial News and Stock Analysis
+```
+# Stock Sentiment Analysis Project
 
-## 10 Academy - Week 1 Challenge
+## 📊 Project Overview
+This project analyzes the correlation between financial news sentiment and stock price movements across major technology companies. The implementation follows a structured three-task methodology to provide data-driven insights into how media sentiment influences market behavior.
 
-### 📊 Project Overview
+## 🎯 Project Structure
 
-This project analyzes the relationship between financial news sentiment and stock price movements. It implements comprehensive technical analysis using TA-Lib, calculates financial metrics, and provides interactive visualizations for multiple stocks.
+### Task 1: News Data Analysis
+- Exploratory analysis of financial news data
+- Publisher distribution and volume trends
+- Temporal patterns in news publication
 
-### 🚀 Quick Start
+### Task 2: Technical Stock Analysis
+- Technical indicators calculation using TA-Lib (MA, RSI, MACD)
+- Financial metrics computation with PyNance
+- Comprehensive visualization dashboards
 
-```bash
-# Clone repository
-git clone https://github.com/arwanasir/nova-sentiment.git
-cd nova-sentiment
+### Task 3: Sentiment-Stock Correlation
+- Sentiment analysis of news headlines using TextBlob
+- Date alignment between news and stock market data
+- Correlation analysis between sentiment scores and stock returns
 
-# Install dependencies
-pip install -r requirements.txt
+## 🛠️ Technical Stack
 
-# Run analysis
-jupyter notebook notebooks/02_technical_analysis.ipynb
+### Programming & Analysis
+- **Python 3.x** - Primary programming language
+- **Jupyter Notebooks** - Interactive analysis and visualization
+- **pandas** - Data manipulation and analysis
+- **numpy** - Numerical computations
+
+### Financial Analysis
+- **TA-Lib** - Technical indicators calculation
+- **PyNance** - Financial metrics computation
+- **yfinance** - Stock data retrieval
+
+### Natural Language Processing
+- **TextBlob** - Sentiment analysis
+- **nltk** - Natural language processing utilities
+
+### Visualization
+- **matplotlib** - Static visualizations
+- **seaborn** - Statistical visualizations
+
+### Version Control
+- **Git** - Version control and collaboration
+- **GitHub**- Repository hosting and project management
 ```

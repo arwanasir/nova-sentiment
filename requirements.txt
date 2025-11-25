@@ -6,3 +6,4 @@ jupyter
 yfinance
 ta-lib
 pynance 
+textblob
